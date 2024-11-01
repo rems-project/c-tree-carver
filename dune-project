@@ -20,11 +20,11 @@
  (synopsis "Clang-based tool for tree-carving C source trees")
  (description "")
  (depends
-     (ocaml (>= 4.12.0))
+     (ocaml (>= 4.14.1))
      conf-c++
      (conf-cmake :dev)
-     (conf-llvm (= 12.0.1))
-     (conf-python3 :with-test)
+     (conf-llvm (= 15))
+     (conf-python-3 :with-test)
      (fileutils (>= 0.6.4))
      (shexp (>= v0.15.0))
      (ocamlformat (and (>= 0.25.1) :dev))
@@ -35,7 +35,7 @@
   (topics c clang tool tree-carving)))
 
 (package
- (name conf-libclang-12-dev)
+ (name conf-libclang-15-dev)
  (allow_empty))
 
 

@@ -42,7 +42,16 @@
 cmake_minimum_required(VERSION 3.16.3)
 project(clang-tree-carver)
 
-find_package(LLVM "12.0.0" REQUIRED CONFIG)
+find_package(LLVM "15.0.7" REQUIRED CONFIG)
+# Not sure what the correct/idiomatic CMake is for a situation where packages
+# aren't version but CMake defaults to a wrong but earlier one instead of a
+# correct later one.
+#   /usr/lib/cmake/clang-12/ClangConfig.cmake, version: unknown
+#   /usr/lib/cmake/clang-15/ClangConfig.cmake, version: unknown
+#   /lib/cmake/clang-12/ClangConfig.cmake, version: unknown
+#   /lib/cmake/clang-15/ClangConfig.cmake, version: unknown
+# So I'm hard-coding it.
+set(Clang_DIR "/usr/lib/cmake/clang-15")
 find_package(Clang REQUIRED CONFIG)
 
 set(CLANG_LIBS

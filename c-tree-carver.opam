@@ -10,11 +10,11 @@ homepage: "https://github.com/rems-project/c-tree-carver"
 bug-reports: "https://github.com/rems-project/c-tree-carver/issues"
 depends: [
   "dune" {>= "3.7"}
-  "ocaml" {>= "4.12.0"}
+  "ocaml" {>= "4.14.1"}
   "conf-c++"
   "conf-cmake" {dev}
-  "conf-llvm" {= "12.0.1"}
-  "conf-python3" {with-test}
+  "conf-llvm" {= "15"}
+  "conf-python-3" {with-test}
   "fileutils" {>= "0.6.4"}
   "shexp" {>= "v0.15.0"}
   "ocamlformat" {>= "0.25.1" & dev}
