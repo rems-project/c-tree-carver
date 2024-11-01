@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - cheri-tests
+
+# cancel in-progress job when a new push is performed
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        version: [4.14.1]
+
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: System dependencies (ubuntu)
+      run: |
+        sudo apt-get install opam python3 clang-15 opam libclang-15-dev llvm-15-dev
+
+    - name: Restore cached opam
+      id: cache-opam-restore
+      uses: actions/cache/restore@v4
+      with:
+        path: ~/.opam
+        key: ${{ matrix.version }}
+
+    - name: Setup opam
+      if: steps.cache-opam-restore.outputs.cache-hit != 'true'
+      run: |
+        opam init --yes --no-setup --shell=sh --compiler=${{ matrix.version }}
+        opam install --with-test --deps-only --yes .
+
+    - name: Save cached opam
+      if: steps.cache-opam-restore.outputs.cache-hit != 'true'
+      id: cache-opam-save
+      uses: actions/cache/save@v4
+      with:
+        path: ~/.opam
+        key: ${{ steps.cache-opam-restore.outputs.cache-primary-key }}
+
+    - name: Install c-tree-carver
+      run: |
+        opam switch ${{ matrix.version }}
+        eval $(opam env --switch=${{ matrix.version }})
+        opam install --yes .
+
+    - name: Run CI tests
+      run: |
+        opam switch ${{ matrix.version }}
+        eval $(opam env --switch=${{ matrix.version }})
+        dune runtest && cd cpp && ./test/run_test.py make && ./test/run_test.py for
